@@ -1,0 +1,36 @@
+
+name: Run Postman API Tests
+
+on:
+  push:
+    paths:
+      - '**.json'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v3
+
+      - name: 🟢 Set up Node.js v22
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+
+      - name: 📦 Install Newman & HTML reporter
+        run: npm install -g newman newman-reporter-html
+
+      - name: 🚀 Run Newman with HTML report
+        run: |
+          newman run "Books API Collection_Naorin.json" \
+            -e "Books Collection Env_Naorin.json" \
+            -r cli,html \
+            --reporter-html-export newman-report.html
+      - name: 📤 Upload Newman report
+        uses: actions/upload-artifact@v4
+        with:
+          name: newman-html-report
+          path: newman-report.html

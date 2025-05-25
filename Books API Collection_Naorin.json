@@ -1,0 +1,211 @@
+{
+	"info": {
+		"_postman_id": "c64e27a4-e728-4b3e-9a61-ccdab5c37d69",
+		"name": "Books API Collection_Naorin",
+		"description": "Each field uses its own random variable injected by pre-request script.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "44943612",
+		"_collection_link": "https://naorin-291793.postman.co/workspace/Naorin's-Workspace~fc08ddb4-d3d4-4890-8e7d-f5c380832626/collection/44943612-c64e27a4-e728-4b3e-9a61-ccdab5c37d69?action=share&source=collection_link&creator=44943612"
+	},
+	"item": [
+		{
+			"name": "Add Book",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const titles = [\"Echoes of Memory\", \"Two Hundred Years\", \"Whispers in the Fog\", \"Shadows of the Moon\", \"Winds of Time\"];",
+							"",
+							"const authors = [\"Gabriel García\", \"Haruki Murakami\", \"Virginia Woolf\", \"Rifat Naorin\",\"Chinua Achebe\", \"Isabel Allende\"];",
+							"",
+							"const genres = [\"fiction\", \"non-fiction\", \"mystery\", \"fantasy\", \"philosophy\"];",
+							"",
+							"const years = Array.from({length: 150}, (_, i) => 1875 + i);",
+							"",
+							"pm.environment.set(\"randomTitle\", titles[Math.floor(Math.random() * titles.length)]);",
+							"",
+							"pm.environment.set(\"randomAuthor\", authors[Math.floor(Math.random() * authors.length)]);",
+							"",
+							"pm.environment.set(\"randomGenre\", genres[Math.floor(Math.random() * genres.length)]);",
+							"",
+							"pm.environment.set(\"randomYearPublished\", years[Math.floor(Math.random() * years.length)]);",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Book successfully added\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"{{randomTitle}}\",\n    \"author\": \"{{randomAuthor}}\",\n    \"genre\": \"{{randomGenre}}\",\n    \"yearPublished\": {{randomYearPublished}}\n}"
+				},
+				"url": "{{baseUrl}}/books"
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Books & Randomize",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"let books = pm.response.json();",
+							"if (books.length > 0) {",
+							"    let randomIndex = Math.floor(Math.random() * books.length);",
+							"    let bookId = books[randomIndex].id;",
+							"    pm.environment.set(\"randomBookId\", bookId);",
+							"    console.log(\"Random book ID saved:\", bookId);",
+							"} else {",
+							"    console.warn(\"No books found in the response.\");",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{baseUrl}}/books"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Book by Random ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{baseUrl}}/books/{{randomBookId}}"
+			},
+			"response": []
+		},
+		{
+			"name": "Update Book",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const titles = [\"Echoes of Memory\", \"Two Hundred Years\", \"Whispers in the Fog\", \"Shadows of the Moon\", \"Winds of Time\"];",
+							"",
+							"const authors = [\"Gabriel García\", \"Haruki Murakami\", \"Virginia Woolf\",\"Rifat Naorin\", \"Chinua Achebe\", \"Isabel Allende\"];",
+							"",
+							"const genres = [\"fiction\", \"non-fiction\", \"mystery\", \"fantasy\", \"philosophy\"];",
+							"",
+							"const years = Array.from({length: 150}, (_, i) => 1875 + i);",
+							"",
+							"pm.environment.set(\"randomTitle\", titles[Math.floor(Math.random() * titles.length)]);",
+							"",
+							"pm.environment.set(\"randomAuthor\", authors[Math.floor(Math.random() * authors.length)]);",
+							"",
+							"pm.environment.set(\"randomGenre\", genres[Math.floor(Math.random() * genres.length)]);",
+							"",
+							"pm.environment.set(\"randomYearPublished\", years[Math.floor(Math.random() * years.length)]);",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Book updated or blocked\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 403]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"{{randomTitle}}\",\n    \"author\": \"{{randomAuthor}}\",\n    \"genre\": \"{{randomGenre}}\",\n    \"yearPublished\": {{randomYearPublished}}\n}"
+				},
+				"url": "{{baseUrl}}/books/{{randomBookId}}"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Book",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Book updated or blocked\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 403]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"packages": {},
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": "{{baseUrl}}/books/{{randomBookId}}"
+			},
+			"response": []
+		}
+	]
+}
