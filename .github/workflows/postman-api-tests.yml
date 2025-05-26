@@ -2,8 +2,8 @@ name: Run Postman API Tests
 
 on:
   push:
-    paths:
-      - '**.json'
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
