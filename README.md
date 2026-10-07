@@ -6,13 +6,15 @@ A Postman collection that exercises a REST API for books (create, read, update a
 
 ## What is tested
 
-| Request | Method | Check |
-|---------|--------|-------|
-| Add Book | POST `/books` | Returns 201; request body is built from random pre-request data |
-| Get All Books & Randomize | GET `/books` | Returns 200; picks a random book ID and saves it to the environment |
-| Get Book by Random ID | GET `/books/{id}` | Returns 200 for the saved ID |
-| Update Book | PATCH `/books/{id}` | Returns an accepted status (200 or 403) |
-| Delete Book | DELETE `/books/{id}` | Returns an accepted status (200 or 403) |
+| Request | Method | Checks |
+|---------|--------|--------|
+| Add Book | POST `/books` | Returns 201, a numeric `id`, and the submitted title and author |
+| Get All Books & Randomize | GET `/books` | Returns 200 and a non-empty list; saves a random book ID to the environment |
+| Get Book by Random ID | GET `/books/{id}` | Returns 200 and the same `id` that was requested |
+| Update Book | PATCH `/books/{id}` | Returns 200 and the response contains the updated title and author |
+| Delete Book | DELETE `/books/{id}` | Returns 200 |
+
+The suite runs 5 requests with 9 assertions.
 
 Each field of the Add Book and Update Book payloads (title, author, genre, year) comes from its own random variable, set by a pre-request script.
 
