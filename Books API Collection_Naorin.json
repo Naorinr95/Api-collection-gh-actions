@@ -40,8 +40,15 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Book successfully added\", function () {",
+							"pm.test(\"Book successfully added (201)\", function () {",
 							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Response echoes the submitted book\", function () {",
+							"    const body = pm.response.json();",
+							"    pm.expect(body.id).to.be.a(\"number\");",
+							"    pm.expect(body.title).to.eql(pm.environment.get(\"randomTitle\"));",
+							"    pm.expect(body.author).to.eql(pm.environment.get(\"randomAuthor\"));",
 							"});"
 						],
 						"type": "text/javascript",
@@ -76,6 +83,11 @@
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
+							"",
+							"pm.test(\"Response is a non-empty list of books\", function () {",
+							"    pm.expect(pm.response.json()).to.be.an(\"array\").that.is.not.empty;",
+							"});",
+							"",
 							"let books = pm.response.json();",
 							"if (books.length > 0) {",
 							"    let randomIndex = Math.floor(Math.random() * books.length);",
@@ -106,6 +118,11 @@
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Returned book matches the requested ID\", function () {",
+							"    const body = pm.response.json();",
+							"    pm.expect(String(body.id)).to.eql(String(pm.environment.get(\"randomBookId\")));",
 							"});"
 						]
 					}
@@ -150,10 +167,15 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Book updated or blocked\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([200, 403]);",
+							"pm.test(\"Book updated (200)\", function () {",
+							"    pm.response.to.have.status(200);",
 							"});",
-							""
+							"",
+							"pm.test(\"Response contains the updated fields\", function () {",
+							"    const body = pm.response.json();",
+							"    pm.expect(body.title).to.eql(pm.environment.get(\"randomTitle\"));",
+							"    pm.expect(body.author).to.eql(pm.environment.get(\"randomAuthor\"));",
+							"});"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -183,10 +205,9 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Book updated or blocked\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([200, 403]);",
-							"});",
-							""
+							"pm.test(\"Book deleted (200)\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
 						],
 						"type": "text/javascript",
 						"packages": {}
