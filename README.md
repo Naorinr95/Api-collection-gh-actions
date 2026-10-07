@@ -2,7 +2,7 @@
 
 A Postman collection that exercises a REST API for books (create, read, update and delete), run automatically with **Newman** in a **GitHub Actions** pipeline that publishes an HTML report on every push.
 
-![Run Postman API Tests](https://github.com/Naorinr95/Api-collection-gh-actions/actions/workflows/postman-api-tests.yml/badge.svg)
+![Run Postman API Tests](https://github.com/Naorinr95/Api-collection-gh-actions/actions/workflows/postman-api-tests.yml/badge.svg?branch=main&event=push)
 
 ## What is tested
 
