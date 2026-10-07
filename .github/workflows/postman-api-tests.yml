@@ -4,25 +4,26 @@ on:
   push:
     branches:
       - main
+  pull_request:
   workflow_dispatch:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: 🟢 Set up Node.js v22
-        uses: actions/setup-node@v3
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      - name: 📦 Install Newman & HTMLExtra reporter
+      - name: Install Newman and HTML Extra reporter
         run: npm install -g newman newman-reporter-htmlextra
 
-      - name: 🚀 Run Newman with HTMLExtra report
+      - name: Run Newman with HTML Extra report
         run: |
           newman run "Books API Collection_Naorin.json" \
             -e "Books Collection Env_Naorin.json" \
@@ -32,8 +33,10 @@ jobs:
             --reporter-htmlextra-darkTheme \
             --reporter-htmlextra-showEnvironmentData
 
-      - name: 📤 Upload Newman report
+      - name: Upload Newman report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: newman-html-report
           path: newman/newman-report.html
+          if-no-files-found: warn
